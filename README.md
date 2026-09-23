@@ -1,24 +1,22 @@
 # G Brutus Power
 
-An interactive, single-page concept for a digital design studio. The marine restoration visuals are illustrative concept art, not photographs of an actual customer repair.
+A cinematic, scroll-driven website concept for a digital design studio. A fictional marine restoration illustrates what a client's work might look like as an immersive narrative. The imagery is generated concept art; it does not depict an actual customer repair.
 
-## Open locally
+## Run locally
 
-Open `index.html` in a browser. No build command, dependencies, API keys, or server are required.
+Open `index.html` in a browser or serve this folder as a static site. There is no build step, package manager, API key or external dependency.
 
-## Deploy to Cloudflare Pages
+## Deploy
 
-Upload the **contents of this folder**, with `index.html` at the upload root. The ZIP package provided alongside this source has that structure and is ready for direct upload. Create a Pages project using the direct upload option; do not upload the Git repository's outer folder as the site root.
+The public site is hosted as a Cloudflare Worker with Git integration for `solgox/gbrutus`. Updates to `main` trigger a production deployment at [gbrutuspower.com](https://gbrutuspower.com/). In Cloudflare's build settings, set the site root to the repository root and leave the build command empty. The output directory should be the directory containing `index.html`.
 
-## Set your contact address
+## What is inside
 
-The `LET'S BUILD SOMETHING` button currently opens `hello@gbrutuspower.com`. If that inbox is not configured, replace the address in `index.html` before sending visitors to this page.
+- `index.html`: six chapters, studio story, before and after comparison, contact.
+- `styles.css`: editorial layout, immersive stages, responsive and reduced-motion styling.
+- `script.js`: scroll camera, shot transitions, hull wipe, HUD, chapter navigation, atmosphere and comparison.
+- `assets/`: paired wide views and four generated close-up / return-to-water frames, optimized as WebP.
 
-## Files
+The camera simulates depth with perspective and photo motion, without a real-time 3D engine. The concept imagery deliberately communicates the idea; it should never be represented as a documented restoration case study.
 
-- `index.html` — content and layout
-- `styles.css` — visuals and responsive design
-- `script.js` — scroll-driven reveal and comparison control
-- `assets/yacht-before.webp`, `assets/yacht-after.webp` — matching concept frames
-
-The two images were generated for this project from these prompts: (1) a weathered modern motor yacht on supports in a cinematic dark workshop; (2) a precise edit restoring its hull while preserving the angle, framing, workshop and yacht geometry. Built-in image generation was used. Artwork may be used in this concept; it should not be presented as proof of a real completed repair.
+The contact button opens `hello@gbrutuspower.com`. Confirm that the mailbox exists before using the site to receive leads.
