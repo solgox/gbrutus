@@ -1,12 +1,18 @@
 (() => {
   const experience = document.querySelector('.experience');
   const sticky = document.querySelector('.experience__sticky');
-  const shots = ['wide', 'damage', 'repair', 'polish', 'return', 'launch'].map(name => document.querySelector('.shot--' + name));
-  const wipe = document.querySelector('.shot--return .shot__wipe');
+  const boat = document.querySelector('.restoration__pair');
+  const wash = document.querySelector('.wash');
+  const launch = document.querySelector('.shot--launch');
+  const detail = document.querySelector('.detail');
+  const detailImages = [...document.querySelectorAll('.detail__image')];
+  const detailNumber = document.querySelector('.detail__number');
+  const detailStep = document.querySelector('.detail__step');
   const scan = document.querySelector('.camera__scan');
   const flare = document.querySelector('.camera__flare');
   const fill = document.querySelector('.hud__fill');
   const percent = document.querySelector('.hud__percent');
+  const restoredLabel = document.querySelector('.hud__restored');
   const cue = document.querySelector('.experience__scroll');
   const chapters = [...document.querySelectorAll('.chapter')];
   const jumps = [...document.querySelectorAll('[data-jump]')];
@@ -36,11 +42,6 @@
   let previousTick = 0;
   let canvasWidth = 0, canvasHeight = 0, specks = [], previousFrame = 0;
 
-  function position(shot, x, y, angle, scale) {
-    shot.style.transform = reducedMotion.matches ? '' :
-      `translate3d(${x.toFixed(2)}%,${y.toFixed(2)}%,0) rotateY(${angle.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
-  }
-
   function scrollPosition() {
     const bounds = experience.getBoundingClientRect();
     const distance = Math.max(1, experience.offsetHeight - sticky.offsetHeight);
@@ -48,42 +49,41 @@
     return clamp(-bounds.top / distance);
   }
 
-  // Each photograph arrives behind a moving soft edge. The images never become
-  // two equally translucent full-screen frames, which caused the double exposure.
-  function reveal(shot, p, start, end) {
-    const edge = -10 + fade(p, start, end) * 120;
-    shot.style.setProperty('--edge', `${edge.toFixed(2)}%`);
-  }
-
   function renderScene(p) {
-    const depth = window.innerWidth <= 700 ? .42 : 1;
-    const push = fade(p, .01, .265);
-    const inspect = fade(p, .125, .39);
-    const mend = fade(p, .31, .57);
-    const finish = fade(p, .50, .735);
-    const pullback = fade(p, .69, .90);
-    const depart = fade(p, .89, 1);
+    // The before and after frames are pixel-aligned. Both stay on the same
+    // camera plane, while a feathered edge removes the dirt as scroll advances.
+    const restored = fade(p, .11, .855);
+    boat.style.setProperty('--wash', `${(-15 + restored * 130).toFixed(2)}%`);
+    const travel = fade(p, .02, .86);
+    const depth = window.innerWidth <= 700 ? .4 : 1;
+    boat.style.transform = reducedMotion.matches ? '' :
+      `translate3d(${(-travel * 1.8 * depth).toFixed(2)}%,${(-travel * .7 * depth).toFixed(2)}%,0) scale(${(1.015 + Math.sin(travel * Math.PI) * .055 * depth).toFixed(3)})`;
+    wash.style.opacity = (restored > .015 && restored < .985 ? Math.min(1,restored * 8,(1 - restored) * 8) * .7 : 0).toFixed(3);
+    launch.style.setProperty('--edge', `${(-10 + fade(p, .91, .99) * 120).toFixed(2)}%`);
 
-    position(shots[0], -push * 6 * depth, -push * 1.2 * depth, (-2 + push * 5) * depth, 1.025 + push * .51 * depth);
-    position(shots[1], (-2 + inspect * 4) * depth, (.8 - inspect * 1.2) * depth, (-5 + inspect * 4) * depth, 1.15 - inspect * .11 * depth);
-    position(shots[2], (3 - mend * 4) * depth, (-.8 + mend * 1.1) * depth, (3 - mend * 5) * depth, 1.14 - mend * .09 * depth);
-    position(shots[3], (-3 + finish * 5) * depth, (.6 - finish * .8) * depth, (-4 + finish * 5) * depth, 1.17 - finish * .12 * depth);
-    position(shots[4], (2 - pullback * 3) * depth, -.5 * depth, (3 - pullback * 5) * depth, 1.18 - pullback * .15 * depth);
-    position(shots[5], (-2 + depart * 3) * depth, 0, (-3 + depart * 4) * depth, 1.13 - depart * .09 * depth);
-    reveal(shots[1], p, .125, .265);
-    reveal(shots[2], p, .31, .45);
-    reveal(shots[3], p, .50, .64);
-    reveal(shots[4], p, .69, .82);
-    reveal(shots[5], p, .89, .975);
+    // The three close-ups explain the craft without replacing the boat.
+    const detailPresence = fade(p, .21, .255) * (1 - fade(p, .70, .77));
+    detail.style.opacity = detailPresence.toFixed(3);
+    detail.style.transform = reducedMotion.matches ? '' :
+      `translate3d(${((1 - detailPresence) * 20 - travel * 9).toFixed(1)}px,${((1 - detailPresence) * 18 + travel * 10).toFixed(1)}px,0) scale(${(.96 + detailPresence * .04).toFixed(3)})`;
+    const repairIn = fade(p, .395, .44);
+    const polishIn = fade(p, .555, .60);
+    detailImages[0].style.opacity = (1 - repairIn).toFixed(3);
+    detailImages[1].style.opacity = (repairIn * (1 - polishIn)).toFixed(3);
+    detailImages[2].style.opacity = polishIn.toFixed(3);
+    detailImages.forEach((img, i) => {
+      img.style.transform = reducedMotion.matches ? '' : `scale(${(1.045 - .035 * travel).toFixed(3)}) translate3d(${(-travel * (i + 1) * 1.1).toFixed(2)}%,0,0)`;
+    });
+    const detailIndex = p < .42 ? 0 : p < .58 ? 1 : 2;
+    detailNumber.textContent = `0${detailIndex + 1} / 03`;
+    detailStep.textContent = ['SURFACE ANALYSIS','GELCOAT REPAIR','FINAL POLISH'][detailIndex];
 
-    const restored = fade(p, .79, .895) * 100;
-    shots[4].style.setProperty('--wipe', `${restored.toFixed(2)}%`);
-    wipe.style.opacity = pulse(p, .79, .81, .875, .90).toFixed(3);
-    scan.style.opacity = pulse(p, .23, .27, .32, .38).toFixed(3);
+    scan.style.opacity = pulse(p, .205, .245, .36, .40).toFixed(3);
     scan.style.setProperty('--scan-position', `${(17 + fade(p, .20, .39) * 67).toFixed(1)}%`);
-    flare.style.opacity = clamp(pulse(p, .59, .63, .72, .78) * .7 + pulse(p, .8, .84, .89, .94) * .3).toFixed(3);
+    flare.style.opacity = clamp(pulse(p, .60, .65, .77, .86) * .6).toFixed(3);
     fill.style.height = `${(p * 100).toFixed(1)}%`;
     percent.textContent = `${String(Math.round(p * 100)).padStart(2, '0')}%`;
+    restoredLabel.textContent = `HULL / ${String(Math.round(restored * 100)).padStart(2, '0')}% RESTORED`;
     cue.style.opacity = (1 - fade(p, .015, .055)).toFixed(3);
     let active = 0;
     for (let i = 1; i < boundaries.length - 1; i++) if (p >= boundaries[i]) active = i;
@@ -150,6 +150,22 @@
     if (!context || !visible || reducedMotion.matches || time - previousFrame < 32) return;
     previousFrame = time;
     context.clearRect(0, 0, canvasWidth, canvasHeight);
+    const clean = fade(progress, .11, .855);
+    if (clean > .02 && clean < .98) {
+      const edge = (-.15 + clean * 1.3) * canvasWidth;
+      for (let i = 0; i < 28; i++) {
+        const dot = specks[i];
+        const drift = (time * (.013 + dot.depth * .009) + i * 59) % (canvasHeight * .29);
+        const x = edge + Math.sin(i * 24.7 + time * .001) * (16 + dot.depth * 33);
+        const y = canvasHeight * .35 + drift;
+        context.beginPath();
+        context.strokeStyle = `rgba(222,247,245,${(.055 + dot.depth * .13).toFixed(3)})`;
+        context.lineWidth = .5 + dot.depth * .8;
+        context.moveTo(x, y);
+        context.lineTo(x - 2 * dot.depth, y + 5 + dot.depth * 8);
+        context.stroke();
+      }
+    }
     for (const point of specks) {
       const x = (point.x * canvasWidth + Math.sin(time * .00015 + point.phase) * 12 - progress * 85 * point.depth + canvasWidth) % canvasWidth;
       const y = (point.y * canvasHeight + Math.cos(time * .00022 + point.phase) * 9 + progress * 65 * point.depth + canvasHeight) % canvasHeight;

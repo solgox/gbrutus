@@ -14,9 +14,9 @@ The public site is hosted as a Cloudflare Worker with Git integration for `solgo
 
 - `public/index.html`: six chapters, studio story, before and after comparison, contact.
 - `public/styles.css`: editorial layout, immersive stages, responsive and reduced-motion styling.
-- `public/script.js`: scroll camera, shot transitions, hull wipe, HUD, chapter navigation, atmosphere and comparison.
-- `public/assets/`: paired wide views and four generated close-up / return-to-water frames, optimized as WebP.
+- `public/script.js`: scroll-controlled cleaning of the same aligned hull, restrained camera movement, detail studies, HUD, chapter navigation, atmosphere and comparison.
+- `public/assets/`: aligned before and after views, three close-up detail studies and a return-to-water frame, optimized as WebP.
 
-The camera simulates depth with perspective and photo motion, without a real-time 3D engine. The concept imagery deliberately communicates the idea; it should never be represented as a documented restoration case study.
+The main boat stays in place while a masked clean version advances across its hull as the visitor scrolls. Close-up studies provide craft context, and the departure is the final shot. The camera uses small 2.5D movements without a real-time 3D engine. The imagery is concept art; it should never be represented as a documented restoration case study.
 
 The contact button opens `hello@gbrutuspower.com`. Confirm that the mailbox exists before using the site to receive leads.
