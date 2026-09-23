@@ -15,10 +15,10 @@ The public site is hosted as a Cloudflare Worker with Git integration for `solgo
 - `public/index.html`: six chapters, studio story, before and after comparison, contact.
 - `public/styles.css`: editorial layout, immersive stages, responsive and reduced-motion styling.
 - `public/script.js`: story scroll, photographic fallback, HUD, chapter navigation, atmosphere and comparison.
-- `public/ship-scene.js`: WebGL yacht, a camera that orbits one full turn, and scroll-controlled grime removal on the 3D hull.
+- `public/ship-scene.js`: a single WebGL yacht throughout the story, a scroll-controlled 360-degree camera orbit, layered hull weathering and progressive restoration.
 - `public/assets/3d/`: desktop and mobile optimized GLB models, a local Three.js runtime, and license notices. No third-party CDN is needed at runtime.
-- `public/assets/`: aligned before and after views, three close-up detail studies and a return-to-water frame, optimized as WebP.
+- `public/assets/`: a generated empty shipyard background for the 3D scene; aligned before and after views, three close-up studies and a return-to-water frame for the WebGL/reduced-motion fallback.
 
-The opening and final photographs bookend a genuine 3D orbit. While the camera completes a 360-degree circuit, a shader clears grime progressively along the model's hull. The rendered yacht is a licensed concept model, not a photogrammetric reconstruction of the generated yacht in the still imagery. The aligned photographic cleaning effect remains a fallback if WebGL is unavailable or reduced motion is requested. This concept should never be represented as a documented restoration case study. See `ATTRIBUTION.md` for the model source and code licenses.
+With WebGL enabled, the camera orbits one yacht throughout the scroll story, and a shader removes persistent grime and a surface scar progressively on its actual geometry. The before/after comparison captures that same 3D yacht at one camera angle. The licensed model is a concept asset with no photographic texture maps; the render must not be presented as photography or photogrammetry. The photographic stills show a different, generated yacht and are used only as a fallback when WebGL is unavailable or reduced motion is requested. This concept should never be represented as a documented restoration case study. See `ATTRIBUTION.md` for the model source and code licenses.
 
 The contact button opens `hello@gbrutuspower.com`. Confirm that the mailbox exists before using the site to receive leads.

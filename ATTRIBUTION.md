@@ -4,4 +4,4 @@
 - **Three.js r170**, copyright Three.js authors, MIT license. Local vendored source and its license in `public/assets/3d/vendor/`.
 - **meshoptimizer decoder**, copyright Arseny Kapoulkine, MIT license. Local decoder and its license in `public/assets/3d/vendor/`.
 
-All photographic imagery in the experience is generated concept art and does not depict a real customer's repair.
+The empty shipyard background and photographic fallback images are generated concept art and do not depict a real customer's repair. The 3D boat is a distinct, openly licensed model with procedural weathering; it is not a photographic scan of the yacht in the fallback images.
