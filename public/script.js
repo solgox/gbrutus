@@ -4,6 +4,7 @@
   const boat = document.querySelector('.restoration__pair');
   const wash = document.querySelector('.wash');
   const launch = document.querySelector('.shot--launch');
+  const vesselStage = document.querySelector('.vessel-stage');
   const detail = document.querySelector('.detail');
   const detailImages = [...document.querySelectorAll('.detail__image')];
   const detailNumber = document.querySelector('.detail__number');
@@ -59,10 +60,12 @@
     boat.style.transform = reducedMotion.matches ? '' :
       `translate3d(${(-travel * 1.8 * depth).toFixed(2)}%,${(-travel * .7 * depth).toFixed(2)}%,0) scale(${(1.015 + Math.sin(travel * Math.PI) * .055 * depth).toFixed(3)})`;
     wash.style.opacity = (restored > .015 && restored < .985 ? Math.min(1,restored * 8,(1 - restored) * 8) * .7 : 0).toFixed(3);
+    window.gbrutusScene?.setProgress(p);
+    vesselStage.style.opacity = window.gbrutusScene?.ready ? pulse(p, .12, .20, .83, .92).toFixed(3) : '0';
     launch.style.setProperty('--edge', `${(-10 + fade(p, .91, .99) * 120).toFixed(2)}%`);
 
     // The three close-ups explain the craft without replacing the boat.
-    const detailPresence = fade(p, .21, .255) * (1 - fade(p, .70, .77));
+    const detailPresence = window.gbrutusScene?.ready ? 0 : fade(p, .21, .255) * (1 - fade(p, .70, .77));
     detail.style.opacity = detailPresence.toFixed(3);
     detail.style.transform = reducedMotion.matches ? '' :
       `translate3d(${((1 - detailPresence) * 20 - travel * 9).toFixed(1)}px,${((1 - detailPresence) * 18 + travel * 10).toFixed(1)}px,0) scale(${(.96 + detailPresence * .04).toFixed(3)})`;
