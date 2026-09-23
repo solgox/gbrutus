@@ -164,11 +164,13 @@ async function init() {
     vessel.traverse(object => { if (object.isMesh) applyRestoration(object); });
     const bounds = new THREE.Box3().setFromObject(vessel);
     const center = bounds.getCenter(new THREE.Vector3());
+    const size = bounds.getSize(new THREE.Vector3());
     vessel.position.sub(center);
     const pivot = new THREE.Group();
-    pivot.rotation.x = -Math.PI / 2;
-    pivot.scale.setScalar(mobile.matches ? .021 : .026);
-    pivot.position.y = 2.0;
+    // The GLB is already Y-up and approximately five scene units long.
+    const scale = (mobile.matches ? 10.1 : 12.4) / size.z;
+    pivot.scale.setScalar(scale);
+    pivot.position.y = size.y * scale / 2 + .08;
     pivot.add(vessel);
     scene.add(pivot);
     active = true;
