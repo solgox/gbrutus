@@ -8,7 +8,7 @@ Open `index.html` in a browser or serve this folder as a static site. There is n
 
 ## Deploy
 
-The public site is hosted as a Cloudflare Worker with Git integration for `solgox/gbrutus`. Updates to `main` trigger a production deployment at [gbrutuspower.com](https://gbrutuspower.com/). In Cloudflare's build settings, set the site root to the repository root and leave the build command empty. The output directory should be the directory containing `index.html`.
+The public site is hosted as a Cloudflare Worker with Git integration for `solgox/gbrutus`. The `wrangler.jsonc` file configures this repository as a static-asset Worker. Cloudflare should use the repository root, with `npx wrangler deploy` as its production deploy command and `npx wrangler preview` for branch previews. Commits to `main` can then deploy to [gbrutuspower.com](https://gbrutuspower.com/).
 
 ## What is inside
 
