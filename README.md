@@ -4,7 +4,13 @@ A cinematic, scroll-driven website concept for a digital design studio. A fictio
 
 ## Run locally
 
-Open `public/index.html` in a browser or serve the `public/` folder as a static site. The website itself has no build step, API key or external dependency.
+Serve the `public/` folder as a static site, for example from the project root:
+
+```sh
+python3 -m http.server 8080 --directory public
+```
+
+Then open `http://localhost:8080`. Browser security restrictions prevent the 3D module and GLB from loading reliably when opening `index.html` directly with `file://`. The photographic restoration remains available in that case. The website itself has no build step or API key.
 
 ## Deploy
 
@@ -19,6 +25,6 @@ The public site is hosted as a Cloudflare Worker with Git integration for `solgo
 - `public/assets/3d/`: desktop and mobile optimized GLB models, a local Three.js runtime, and license notices. No third-party CDN is needed at runtime.
 - `public/assets/`: a generated empty shipyard background for the 3D scene; aligned before and after views, three close-up studies and a return-to-water frame for the WebGL/reduced-motion fallback.
 
-With WebGL enabled, the camera orbits one yacht throughout the scroll story, and a shader removes persistent grime and a surface scar progressively on its actual geometry. The before/after comparison captures that same 3D yacht at one camera angle. The licensed model is a concept asset with no photographic texture maps; the render must not be presented as photography or photogrammetry. The photographic stills show a different, generated yacht and are used only as a fallback when WebGL is unavailable or reduced motion is requested. This concept should never be represented as a documented restoration case study. See `ATTRIBUTION.md` for the model source and code licenses.
+With WebGL enabled and the boat visibly rendered, the camera orbits one yacht through the middle chapters, and a shader removes grime and a surface scar progressively on its geometry. The before/after comparison captures that same 3D yacht at one camera angle. The photographic stills show a different, generated yacht; they remain the interactive fallback when WebGL is unavailable, the shader does not render, or reduced motion is requested. The licensed model is a concept asset with no photographic texture maps; the render must not be presented as photography or photogrammetry. This concept should never be represented as a documented restoration case study. See `ATTRIBUTION.md` for the model source and code licenses.
 
 The contact button opens `hello@gbrutuspower.com`. Confirm that the mailbox exists before using the site to receive leads.

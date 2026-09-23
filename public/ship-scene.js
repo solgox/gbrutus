@@ -191,6 +191,22 @@ function frame() {
   renderer.render(scene, camera);
 }
 
+function modelIsVisible() {
+  // GL shader errors do not necessarily throw from renderer.render(). Check
+  // the actual framebuffer before covering the photographic boat.
+  const gl = renderer.getContext();
+  const pixel = new Uint8Array(4);
+  const width = gl.drawingBufferWidth, height = gl.drawingBufferHeight;
+  for (const x of [.3, .4, .5, .6, .7]) {
+    for (const y of [.35, .45, .55, .65]) {
+      gl.readPixels(Math.floor(width * x), Math.floor(height * y), 1, 1,
+        gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+      if (pixel[3] > 10) return true;
+    }
+  }
+  return false;
+}
+
 function captureComparison() {
   const before = document.querySelector('.comparison > img');
   const after = document.querySelector('.comparison__after img');
@@ -229,6 +245,7 @@ async function init() {
   if (reducedMotion.matches || !canvas) return;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !mobile.matches, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+    renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.55;
@@ -242,7 +259,8 @@ async function init() {
     const rim = new THREE.DirectionalLight('#ffc69b', 2.5);
     rim.position.set(8, 5, -9);
     scene.add(rim);
-    decorateDock();
+    // The photographed shipyard provides the floor and supports. Keeping the
+    // WebGL scene limited to the boat makes its visibility test meaningful.
     const loader = new GLTFLoader();
     loader.setMeshoptDecoder(MeshoptDecoder);
     await MeshoptDecoder.ready;
@@ -262,15 +280,19 @@ async function init() {
     pivot.add(vessel);
     scene.add(pivot);
     active = true;
-    window.gbrutusScene.ready = true;
-    document.body.classList.add('has-3d');
     resize();
     frame();
+    if (!modelIsVisible()) throw new Error('The 3D boat drew no visible pixels');
+    window.gbrutusScene.ready = true;
+    document.body.classList.add('has-3d');
     requestAnimationFrame(captureComparison);
     window.dispatchEvent(new Event('scroll'));
   } catch (error) {
     // The aligned photographic cleaning scene remains fully functional.
     console.warn('3D vessel unavailable; using the photographic restoration.', error);
+    active = false;
+    window.gbrutusScene.ready = false;
+    document.body.classList.remove('has-3d');
     renderer?.dispose();
   }
 }
@@ -281,4 +303,11 @@ const observer = new IntersectionObserver(entries => {
   init();
 }, { rootMargin: '400px' });
 observer.observe(section);
+canvas.addEventListener('webglcontextlost', event => {
+  event.preventDefault();
+  active = false;
+  window.gbrutusScene.ready = false;
+  document.body.classList.remove('has-3d');
+  window.dispatchEvent(new Event('scroll'));
+});
 window.addEventListener('resize', () => { lastWidth = 0; frame(); }, { passive: true });
